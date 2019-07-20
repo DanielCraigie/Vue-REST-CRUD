@@ -10,23 +10,19 @@ var crudapp = new Vue({
         contacts: []
     },
     mounted: function() {
-        console.log("Hello from Vue")
         this.getContacts()
     },
     methods: {
         getContacts: function() {
             axios.get('api/contacts').then(function(response) {
-                console.log(response.data)
                 crudapp.contacts = response.data
             }).catch(function (error) {
                 console.log(error)
             })
         },
         createContact: function() {
-            console.log("Create contact.")
-
             let formData = new FormData();
-            console.log("name: " + this.name)
+
             formData.append("name", this.name)
             formData.append("email", this.email)
             formData.append("city", this.city)
@@ -45,7 +41,7 @@ var crudapp = new Vue({
                 config: { headers: { "Content-Type": "multipart/form-data" } }
             }).then(function(response) {
                 // handle success
-                console.log(response)
+                contact["id"] = response.data.id
                 crudapp.contacts.push(contact)
                 crudapp.resetForm()
             }).catch(function(error) {
@@ -61,8 +57,6 @@ var crudapp = new Vue({
             this.job = ""
         },
         deleteContact: function(id) {
-            console.log("Delete " + id)
-
             axios({
                 method: "delete",
                 url: "api/contacts/" + id,

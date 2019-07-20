@@ -49,7 +49,7 @@ class Database
      * Builds and executes SQL statement
      * @param string $sql
      * @param array $params Optional params to bind to statement
-     * @return bool|int
+     * @return bool|\PDOStatement
      */
     protected function exec(string $sql, array $params = [])
     {
@@ -59,7 +59,15 @@ class Database
             return false;
         }
 
-        return $query->rowCount();
+        return $query;
+    }
+
+    /**
+     * @return string
+     */
+    protected function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -84,6 +92,22 @@ class Database
     public static function execute(string $sql, array $params = [])
     {
         $pdo = new self();
-        return $pdo->exec($sql, $params);
+        return $pdo->exec($sql, $params)->rowCount();
+    }
+
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return bool|string
+     */
+    public static function insert(string $sql, array $params = [])
+    {
+        $pdo = new Self();
+
+        if ($result = $pdo->exec($sql, $params)) {
+            return $pdo->lastInsertId();
+        } else {
+            return false;
+        }
     }
 }

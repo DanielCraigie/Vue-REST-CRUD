@@ -68,9 +68,11 @@ class Contacts
 
         $sql = rtrim($sql, ',') . ')';
 
-        if (!Database::execute($sql, $params)) {
-            return $response->withStatus(500, "The Contact could not be added.");
+        if ($id = Database::insert($sql, $params)) {
+            return json_encode(['id' => $id]);
         }
+
+        return $response->withStatus(500, "The Contact could not be added.");
     }
 
     /**
