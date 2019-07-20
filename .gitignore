@@ -1,0 +1,11 @@
+.env
+.idea
+.DS_Store
+
+node_modules
+
+public/css
+public/js
+public/webfonts
+
+vendor

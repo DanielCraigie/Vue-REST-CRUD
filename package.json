@@ -1,0 +1,14 @@
+{
+  "description": "Vue.js testing environment",
+  "dependencies": {
+    "vue": "^2.6.10",
+    "@fortawesome/fontawesome-free": "^5.9.0",
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.14.7",
+    "axios": "^0.19.0"
+  },
+  "scripts": {
+    "postinstall": "./npm-post-install.sh"
+  }
+}

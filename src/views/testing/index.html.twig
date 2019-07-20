@@ -1,0 +1,64 @@
+{% extends "default.html.twig" %}
+
+{% block head %}
+<title>Vue training</title>
+
+{{ parent() }}
+
+<style type="text/css">
+    {{ include("testing/index.css") }}
+</style>
+{% endblock %}
+
+{% block js %}
+    <script type="application/javascript">
+        {{ include("testing/index.js") }}
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg">
+        <h1>Contact Management</h1>
+        <div id="crudapp">
+            <table class="crud-table">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Job</th>
+                    <th>Otions</th>
+                </tr>
+                <tr v-for="contact in contacts">
+                    <td>v{ contact.name }e</td>
+                    <td>v{ contact.email }e</td>
+                    <td>v{ contact.city }e</td>
+                    <td>v{ contact.country }e</td>
+                    <td>v{ contact.job }e</td>
+                    <td><button type="button" @click="deleteContact(contact.id)" class="btn btn-danger"><span class="fas fa-trash"></span></button></td>
+                </tr>
+            </table>
+            <br>
+            <form>
+                <label>Name</label>
+                <input type="text" name="name" v-model="name">
+                <br>
+                <label>Email</label>
+                <input type="email" name="email" v-model="email">
+                <br>
+                <label>City</label>
+                <input type="text" name="city" v-model="city">
+                <br>
+                <label>Country</label>
+                <input type="text" name="country" v-model="country">
+                <br>
+                <label>Job</label>
+                <input type="text" name="job" v-model="job">
+                <br>
+                <input type="button" @click="createContact" value="Add">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
