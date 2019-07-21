@@ -85,6 +85,18 @@ The `npm-post-install.sh` file in the project root is a helper file triggered af
 - Vue files should be loaded into templates using teh `include()` Twig function
 - Vue files should be named after the functions that render the template
 
+  #### Vue Delimiters
+
+   Both Vue and Twig use the same output delimiters "{{  }}" by default.  This means that in order to include Vue apps in pages being rendered by Twig, one of them will need to be modified to avoid collisions.
+
+   From the Googling I have done so far, it looks easier to change the Vue delimiters (even though it needs to be done for each application/page).
+
+   In this project, I define a `delimiters` attribute when invoking each instance of Vue:
+ 
+   `var app = new Vue({ delimiters: ['v{', '}e'], el: ...`
+
+   This allows the use of `{{ ... }}` for Twig and `v{ ... }e` for Vue.
+
 ## Known Issues
 ### Migrations
 The `migrations` container is dependent on files in the `vendor` directory, so will not be able to function properly until the `composer` container has completed its initial install.
