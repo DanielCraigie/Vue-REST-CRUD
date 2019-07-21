@@ -4,6 +4,24 @@ This project is an example of a basic CRUD (Create, Read, Update & Delete) form 
 
 ##### Disclaimer: I have created this environment for experimentation purposes while learning Vue, as such it should **not** be used as a reference tool/working example for use in a production environment.
 
+## Instructions
+
+### Requirements
+
+- Docker Compose [installed](https://docs.docker.com/compose/install/)
+- A running Docker Engine
+
+### Instillation
+
+1. Clone this repository to your computer
+2. Run `docker-compose up` in the cloned directory
+
+### Usage
+
+Docker Compose will bind port 80 of the web server to 8080 on your host machine.
+
+To use the site navigate to [http://127.0.0.1:8080]
+
 ## Components
 ### Docker
 
@@ -43,8 +61,6 @@ Migration files added to the `migrations` directory will be applied each time th
 ## Dev Environment
 
 The project comes with a docker-compose file to create images, configure and run the containers.
-
-To start the environment simply run `doccker-compose up` in the project root (you will need to have Docker Compose [installed](https://docs.docker.com/compose/install/) and a running Docker Engine on your system)
 
 Some images are defined by Dockerfiles stored in the `.build` path.
 
@@ -98,7 +114,9 @@ The `npm-post-install.sh` file in the project root is a helper file triggered af
    This allows the use of `{{ ... }}` for Twig and `v{ ... }e` for Vue.
 
 ## Known Issues
+
 ### Migrations
+
 The `migrations` container is dependent on files in the `vendor` directory, so will not be able to function properly until the `composer` container has completed its initial install.
 This means that when starting the Development environment for the first time you will need to re-run the `migrations` container to initialise the database.
 
