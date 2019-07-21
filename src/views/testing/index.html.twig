@@ -17,10 +17,85 @@
 {% endblock %}
 
 {% block content %}
+<!-- template for the modal component -->
+<script type="text/x-template" id="modal-template">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container">
+                    <div class="modal-header">
+                        <slot name="header"></slot>
+                    </div>
+                    <div class="modal-body">
+                        <slot name="body"></slot>
+                    </div>
+                    <div class="modal-footer">
+                        <slot name="footer"></slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
 <div class="row">
     <div class="col-lg">
         <h1>Contact Management</h1>
         <div id="crudapp">
+            <a class="btn btn-success" id="add-btn" @click="showModal = true"><i class="fas fa-plus-circle"></i> New Contact</a>
+            <!-- use the modal component, pass in the prop -->
+            <modal v-if="showModal" @close="showModal = false">
+                <h3 slot="header">New Contact Details</h3>
+                <div slot="body">
+                    <div class="container">
+                        <div class="form">
+                            <form id="new-contact" @submit="checkForm" action="" method="post" novalidate>
+                                <p v-if="errors.length">
+                                    <b>Please correct the following error(s):</b>
+                                    <ul>
+                                        <li v-for="error in errors" class="text-danger">v{ error }e</li>
+                                    </ul>
+                                </p>
+                                <div class="form-row">
+                                    <div class="col">
+                                        <div class="form-group needs-validation">
+                                            <label for="name">Name</label>
+                                            <input type="text" name="name" v-model="name.value" id="name" v-bind:class="{ 'form-control':true, 'is-invalid':name.error }" aria-describedby="nameHelp" required>
+                                            <div class="invalid-feedback">You must provide a Name.</div>
+                                            <small id="nameHelp" class="form-text text-muted">Individual's full name</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="city">City</label>
+                                            <input type="text" name="city" v-model="city.value" id="city" v-bind:class="{ 'form-control':true, 'is-invalid':city.error }" aria-describedby="cityHelp">
+                                            <small id="cityHelp" class="form-text text-muted">Enter the closest Town/City</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="job">Job</label>
+                                            <input type="text" name="job" v-model="job.value" id="job" v-bind:class="{ 'form-control':true, 'is-invalid':job.error }" aria-describedby="jobHelp">
+                                            <small id="jobHelp" class="form-text text-muted">Enter job title as found on CV</small>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <input type="email" name="email" v-model="email.value" id="email" v-bind:class="{ 'form-control':true, 'is-invalid':email.error }" aria-describedby="emailHelp">
+                                            <small id="emailHelp" class="form-text text-muted">Please provide a valid email address</small>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="country">Country</label>
+                                            <input type="text" name="country" v-model="country.value" id="country" v-bind:class="{ 'form-control':true, 'is-invalid':country.error }" aria-describedby="countryHelp">
+                                            <small id="countryHelp" class="form-text text-muted">Current Country of residence</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div slot="footer">
+                    <button class="btn btn-danger" @click="showModal = false"><i class="fas fa-times-circle"></i> Cancel</button>
+                    <button class="btn btn-success" @click="checkForm"><i class="fas fa-plus-circle"></i> Add</button>
+                </div>
+            </modal>
             <table class="crud-table">
                 <tr>
                     <th>Name</th>
@@ -39,25 +114,6 @@
                     <td><button type="button" @click="deleteContact(contact.id)" class="btn btn-danger"><span class="fas fa-trash"></span></button></td>
                 </tr>
             </table>
-            <br>
-            <form>
-                <label>Name</label>
-                <input type="text" name="name" v-model="name">
-                <br>
-                <label>Email</label>
-                <input type="email" name="email" v-model="email">
-                <br>
-                <label>City</label>
-                <input type="text" name="city" v-model="city">
-                <br>
-                <label>Country</label>
-                <input type="text" name="country" v-model="country">
-                <br>
-                <label>Job</label>
-                <input type="text" name="job" v-model="job">
-                <br>
-                <input type="button" @click="createContact" value="Add">
-            </form>
         </div>
     </div>
 </div>

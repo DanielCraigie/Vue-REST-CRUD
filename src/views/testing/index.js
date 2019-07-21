@@ -1,13 +1,19 @@
+Vue.component('modal', {
+    template: '#modal-template'
+})
+
 var crudapp = new Vue({
     delimiters: ['v{', '}e'],
     el: "#crudapp",
     data: {
-        name: "",
-        email: "",
-        city: "",
-        country: "",
-        job: "",
-        contacts: []
+        name: { value: "", error: false },
+        email: { value: "", error: false },
+        city: { value: "", error: false },
+        country: { value: "", error: false },
+        job: { value: "", error: false },
+        contacts: [],
+        errors: [],
+        showModal: false
     },
     mounted: function() {
         this.getContacts()
@@ -23,11 +29,11 @@ var crudapp = new Vue({
         createContact: function() {
             let formData = new FormData();
 
-            formData.append("name", this.name)
-            formData.append("email", this.email)
-            formData.append("city", this.city)
-            formData.append("country", this.country)
-            formData.append("job", this.job)
+            formData.append("name", this.name.value)
+            formData.append("email", this.email.value)
+            formData.append("city", this.city.value)
+            formData.append("country", this.country.value)
+            formData.append("job", this.job.value)
 
             var contact = {};
             formData.forEach(function(value, key) {
@@ -50,11 +56,13 @@ var crudapp = new Vue({
             })
         },
         resetForm: function() {
-            this.name = ""
-            this.email = ""
-            this.city = ""
-            this.country = ""
-            this.job = ""
+            this.name.value = ""
+            this.email.value = ""
+            this.city.value = ""
+            this.country.value = ""
+            this.job.value = ""
+
+            this.showModal = false
         },
         deleteContact: function(id) {
             axios({
@@ -68,6 +76,17 @@ var crudapp = new Vue({
                 // handle error
                 console.log(error)
             })
+        },
+        checkForm: function(e) {
+            // validate fields
+            if (this.name.value.length < 1) {
+                this.errors.push("You must provide the Contacts Name")
+                this.name.error = true
+            }
+
+            if (this.errors.length == 0) {
+                this.createContact()
+            }
         }
     }
 })
