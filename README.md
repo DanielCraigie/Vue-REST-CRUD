@@ -14,7 +14,10 @@ This project is an example of a basic CRUD (Create, Read, Update & Delete) form 
 ### Instillation
 
 1. Clone this repository to your computer
-2. Run `docker-compose up` in the cloned directory
+2. Enter the newly created directory
+3. Create a .env file (clone .env.example)
+4. Run `docker-compose up`
+   1. Run the `migrations` Container for a second time after the `composer` Container has finished
 
 ### Usage
 
