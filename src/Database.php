@@ -3,6 +3,8 @@
 namespace App;
 
 use PDO;
+use PDOStatement;
+use Exception;
 
 /**
  * Database helper Class
@@ -36,12 +38,20 @@ class Database
      * Builds, executes and returns PDO statement
      * @param string $sql
      * @param array $params Optional params to bind to query
-     * @return \PDOStatement
+     * @return PDOStatement
+     * @throws Exception
      */
-    protected function query(string $sql, array $params = []): \PDOStatement
+    protected function query(string $sql, array $params = []): PDOStatement
     {
         $query = $this->pdo->prepare($sql);
         $query->execute($params);
+
+        if (!empty($query->errorCode())
+            && $query->errorCode() != '00000'
+        ) {
+            throw new Exception('DB Error: ' . $query->errorCode() . ' - ' . $query->errorInfo()[0]);
+        }
+
         return $query;
     }
 
@@ -49,14 +59,18 @@ class Database
      * Builds and executes SQL statement
      * @param string $sql
      * @param array $params Optional params to bind to statement
-     * @return bool|\PDOStatement
+     * @return PDOStatement
+     * @throws Exception
      */
-    protected function exec(string $sql, array $params = [])
+    protected function exec(string $sql, array $params = []): PDOStatement
     {
         $query = $this->pdo->prepare($sql);
+        $query->execute($params);
 
-        if (!$query->execute($params)) {
-            return false;
+        if (!empty($query->errorCode())
+            && $query->errorCode() != '00000'
+        ) {
+            throw new Exception('DB Error: ' . $query->errorCode() . ' - ' . $query->errorInfo()[0]);
         }
 
         return $query;
@@ -75,21 +89,22 @@ class Database
      * @param string $sql
      * @param array $params Optional params to bind to query
      * @return array
+     * @throws Exception
      */
     public static function fetchAll(string $sql, array $params = []): array
     {
         $pdo = new self();
-        $query = $pdo->query($sql, $params);
-        return $query->fetchAll();
+        return $pdo->query($sql, $params)->fetchAll();
     }
 
     /**
      * Executes SQL statement and returns number of rows affected
      * @param string $sql
      * @param array $params
-     * @return bool|int
+     * @return int
+     * @throws Exception
      */
-    public static function execute(string $sql, array $params = [])
+    public static function execute(string $sql, array $params = []): int
     {
         $pdo = new self();
         return $pdo->exec($sql, $params)->rowCount();
@@ -98,16 +113,25 @@ class Database
     /**
      * @param string $sql
      * @param array $params
-     * @return bool|string
+     * @return int
+     * @throws Exception
      */
-    public static function insert(string $sql, array $params = [])
+    public static function insert(string $sql, array $params): int
     {
-        $pdo = new Self();
+        $pdo = new self();
+        $pdo->exec($sql, $params);
+        return $pdo->lastInsertId();
+    }
 
-        if ($result = $pdo->exec($sql, $params)) {
-            return $pdo->lastInsertId();
-        } else {
-            return false;
-        }
+    /**
+     * @param string $sql
+     * @param array $params
+     * @return int
+     * @throws Exception
+     */
+    public static function update(string $sql, array $params): int
+    {
+        $pdo = new self();
+        return $pdo->exec($sql, $params)->rowCount();
     }
 }

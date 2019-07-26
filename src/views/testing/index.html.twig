@@ -92,8 +92,9 @@
                     </div>
                 </div>
                 <div slot="footer">
-                    <button class="btn btn-danger" @click="showModal = false"><i class="fas fa-times-circle"></i> Cancel</button>
-                    <button class="btn btn-success" @click="checkForm"><i class="fas fa-plus-circle"></i> Add</button>
+                    <button class="btn btn-danger" @click="cancelModal()"><i class="fas fa-times-circle"></i> Cancel</button>
+                    <button class="btn btn-success" @click="checkForm()" v-bind:style="{ display: modalAddButton }"><i class="fas fa-plus-circle"></i> Add</button>
+                    <button class="btn btn-success" @click="checkForm(id)" v-bind:style="{ display: modalUpdateButton }"><i class="fas fa-check-circle"></i> Update</button>
                 </div>
             </modal>
             <table class="crud-table">
@@ -111,7 +112,10 @@
                     <td>v{ contact.city }e</td>
                     <td>v{ contact.country }e</td>
                     <td>v{ contact.job }e</td>
-                    <td><button type="button" @click="deleteContact(contact.id)" class="btn btn-danger"><span class="fas fa-trash"></span></button></td>
+                    <td>
+                        <button type="button" @click="updateModal(contact.id)" class="btn btn-info"><i class="fas fa-pen"></i></button>
+                        <button type="button" @click="deleteContact(contact.id)" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    </td>
                 </tr>
             </table>
         </div>
